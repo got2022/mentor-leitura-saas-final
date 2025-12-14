@@ -78,27 +78,52 @@ def gerar_roteiro(texto, genero):
 
 def simular_correcao(perguntas_roteiro):
     """
-    Melhora a simulação de feedback para torná-la menos 'bugada' e mais pedagógica.
-    Cada nível terá feedbacks ligeiramente diferentes para simular uma correção real.
+    Melhora a simulação de feedback para torná-la menos 'bugada' e mais pedagógica,
+    incluindo feedbacks específicos para as 5 Competências do ENEM.
     """
     correcao = "## 📝 ROTEIRO DE CORREÇÃO (Simulação Pedagógica)\n\n"
     
+    # Lista de feedbacks baseada no Manual do Corretor ENEM
     for i, item in enumerate(perguntas_roteiro):
         nivel = item["nivel"]
         pergunta = item["pergunta"]
         
-        # Gera feedbacks mais coerentes e pedagógicos
-        if nivel == "LITERAL":
-            feedbacks_acerto = ["✅ Acerto! Localização de fatos dominada. Você identificou a informação de forma direta no texto.", "✅ Excelente! O primeiro passo da leitura está garantido: você sabe o que o texto diz."]
-            feedbacks_erro = ["❌ Atenção! Concentre-se no texto, sem inferências. Qual é o dado EXPLICITADO? **Dica:** Procure por nomes próprios ou datas.", "❌ Revise o nível literal. O erro aqui compromete as próximas etapas de leitura."]
-        
-        elif nivel == "INFERENCIAL":
-            feedbacks_acerto = ["✅ Acerto! Interpretação profunda. Você conseguiu ler as entrelinhas e entender a implicação do autor.", "✅ Muito bom! Sua resposta demonstra a capacidade de conectar ideias e inferir a intenção comunicativa."]
-            feedbacks_erro = ["❌ Atenção! Sua resposta precisa de refinamento. **Dica:** Tente conectar o que foi dito com o contexto social ou a intenção do autor (para que ele escreveu?).", "❌ Faltou um pouco de profundidade. A inferência exige que você conecte duas ideias diferentes do texto."]
+        # --- Feedback Específico para o ENEM (5 Competências) ---
+        if nivel.startswith("C"):
+            if "C1" in nivel:
+                feedbacks_acerto = ["✅ Nível 5 (200 pontos)! Domínio excelente da norma culta. Mantenha a atenção à pontuação complexa.", "✅ C1 OK! Apenas desvios pontuais. Quase no nível máximo."]
+                feedbacks_erro = ["❌ C1: Atenção! Desvios recorrentes de concordância verbal/nominal ou regência. Revise as regras básicas.", "❌ C1: Erros graves de ortografia ou acentuação. Isso limita sua nota. Consulte o vocabulário ortográfico."]
             
-        elif nivel == "CRÍTICO":
-            feedbacks_acerto = ["✅ Acerto! Avaliação ética e social do fato noticiado foi bem fundamentada. Seu posicionamento é maduro.", "✅ Excelente argumento! Seu posicionamento está embasado e considera o contexto social e a função do gênero."]
-            feedbacks_erro = ["❌ Reflita: Sua crítica está baseada apenas na sua opinião? **Dica:** A crítica deve usar o texto como base e relacioná-lo com o mundo real ou outras referências (Repertório Sociocultural).", "❌ O posicionamento é válido, mas falta JUSTIFICATIVA. Por que o posicionamento do autor é atual ou datado?"]
+            elif "C2" in nivel:
+                feedbacks_acerto = ["✅ Nível 5 (200 pontos)! Abordagem completa do tema e uso estratégico de Repertório Sociocultural produtivo.", "✅ Tema e Repertório OK! Demonstra capacidade de leitura de mundo e conexão de áreas do conhecimento."]
+                feedbacks_erro = ["❌ C2: Tangenciamento ou fuga parcial ao tema. Refaça a análise das palavras-chave da proposta.", "❌ C2: O Repertório (citação, dado) foi usado, mas está DESCONECTADO da argumentação. Precisa de produtividade."]
+                
+            elif "C3" in nivel:
+                feedbacks_acerto = ["✅ Nível 5 (200 pontos)! Projeto de texto estratégico e eficiente. As informações se articulam em defesa de um ponto de vista.", "✅ C3 OK! Argumentos desenvolvidos com clareza e progressão textual satisfatória."]
+                feedbacks_erro = ["❌ C3: Falha na Progressão Argumentativa. O D2 (segundo argumento) repete o D1. Precisa de ideias novas e articuladas.", "❌ C3: O projeto de texto é confuso. A tese inicial não foi retomada/defendida nos desenvolvimentos."]
+                
+            elif "C4" in nivel:
+                feedbacks_acerto = ["✅ Nível 5 (200 pontos)! Domínio dos mecanismos linguísticos necessários para a construção da argumentação, com repertório coesivo diversificado.", "✅ C4 OK! Uso eficiente de conectivos inter e intraparágrafos."]
+                feedbacks_erro = ["❌ C4: Repetição excessiva dos mesmos conectivos (Ex: 'Além disso'). Diversifique seu vocabulário coesivo.", "❌ C4: Uso inadequado de conectivos (Ex: usar 'Portanto' no meio do parágrafo). Revise a função semântica."]
+                
+            elif "C5" in nivel:
+                feedbacks_acerto = ["✅ Nível 5 (200 pontos)! Proposta de Intervenção completa (5 elementos) e com excelente detalhamento.", "✅ C5 OK! A intervenção é válida e apresenta Agente, Ação, Modo/Meio e Efeito."]
+                feedbacks_erro = ["❌ C5: A Proposta está incompleta. Verifique se o Agente ou o Detalhamento foram omitidos.", "❌ C5: A intervenção é vaga. Precisa de uma Ação concreta e um Modo/Meio que seja executável."]
+
+        # --- Feedback Genérico para Outros Gêneros (LITERAL/INFERENCIAL/CRÍTICO) ---
+        else:
+             if nivel == "LITERAL":
+                feedbacks_acerto = ["✅ Acerto! Localização de fatos dominada. Você identificou a informação de forma direta no texto.", "✅ Excelente! O primeiro passo da leitura está garantido: você sabe o que o texto diz."]
+                feedbacks_erro = ["❌ Atenção! Concentre-se no texto, sem inferências. Qual é o dado EXPLICITADO? **Dica:** Procure por nomes próprios ou datas.", "❌ Revise o nível literal. O erro aqui compromete as próximas etapas de leitura."]
+            
+             elif nivel == "INFERENCIAL":
+                feedbacks_acerto = ["✅ Acerto! Interpretação profunda. Você conseguiu ler as entrelinhas e entender a implicação do autor.", "✅ Muito bom! Sua resposta demonstra a capacidade de conectar ideias e inferir a intenção comunicativa."]
+                feedbacks_erro = ["❌ Atenção! Sua resposta precisa de refinamento. **Dica:** Tente conectar o que foi dito com o contexto social ou a intenção do autor (para que ele escreveu?).", "❌ Faltou um pouco de profundidade. A inferência exige que você conecte duas ideias diferentes do texto."]
+                
+             elif nivel == "CRÍTICO":
+                feedbacks_acerto = ["✅ Acerto! Avaliação ética e social do fato noticiado foi bem fundamentada. Seu posicionamento é maduro.", "✅ Excelente argumento! Seu posicionamento está embasado e considera o contexto social e a função do gênero."]
+                feedbacks_erro = ["❌ Reflita: Sua crítica está baseada apenas na sua opinião? **Dica:** A crítica deve usar o texto como base e relacioná-lo com o mundo real ou outras referências (Repertório Sociocultural).", "❌ O posicionamento é válido, mas falta JUSTIFICATIVA. Por que o posicionamento do autor é atual ou datado?"]
+
 
         # Aplica o feedback (50/50 chance de acerto/erro para simulação)
         if random.random() > 0.5:
@@ -107,12 +132,14 @@ def simular_correcao(perguntas_roteiro):
             feedback = random.choice(feedbacks_erro)
 
         
-        correcao += f"### {i+1}. NÍVEL {nivel}\n"
+        correcao += f"### {i+1}. {nivel}\n"
         correcao += f"**Pergunta para o Aluno:** *{pergunta}*\n"
         correcao += f"**💬 Feedback do Mentor:** {feedback}\n\n"
         
     return correcao
+   
 
+   
 
 # --- CONFIGURAÇÃO INICIAL E ESTÉTICA (Novo Dashboard) ---
 st.set_page_config(
