@@ -2,141 +2,111 @@ import streamlit as st
 import random
 import time
 
-# --- DADOS ---
-
-# Lista de perguntas e competências para o ENEM
-perguntas_competencias = [
-    {"nivel": "C1 (Demonstrar domínio da norma culta)", "pergunta": "O texto apresenta desvios gramaticais (concordância, regência, colocação pronominal) ou de convenção (acentuação, pontuação, ortografia) que comprometem a compreensão?"},
-    {"nivel": "C2 (Compreender a Proposta)", "pergunta": "O texto aborda o tema proposto de forma completa? Apresenta tangenciamento ou fuga parcial/total?"},
-    {"nivel": "C3 (Seleção e Organização)", "pergunta": "O texto apresenta argumentos consistentes e bem articulados em torno de um ponto de vista claro?"},
-    {"nivel": "C4 (Coesão e Coerência)", "pergunta": "O texto utiliza recursos coesivos interparágrafos (conectivos) e intraparágrafos de maneira diversificada e adequada?"},
-    {"nivel": "C5 (Proposta de Intervenção)", "pergunta": "A proposta de intervenção é completa (Ação, Agente, Meio/Modo, Efeito e Detalhamento)? É original e ética?"}
-]
-
-# Textos de apoio e feedback
-feedbacks = {
-    "C1": "Foco na gramática! A precisão da norma culta é o alicerce para a clareza do seu texto.",
-    "C2": "Revise o tema! Garanta que todos os aspectos da proposta sejam plenamente desenvolvidos.",
-    "C3": "Melhore a argumentação! Desenvolva seus pontos de vista com mais profundidade e evidências.",
-    "C4": "Conecte as ideias! O uso eficaz de conectivos (coesão) e a lógica (coerência) são vitais para a fluidez.",
-    "C5": "Enriqueça a proposta! Lembre-se de detalhar Ação, Agente, Meio, Efeito e Detalhamento."
+# --- Dicionário de Gêneros e Características (Base de Conhecimento do App) ---
+GENEROS = {
+    "Artigo de Opinião": {
+        "caracteristicas": ["Apresenta uma Tese clara.", "Uso de Argumentos e contra-argumentos.", "Linguagem subjetiva (1ª pessoa)."],
+        "literal": ["Qual a principal tese defendida pelo autor?"],
+        "inferencial": ["A qual grupo social o autor parece se dirigir ao usar o termo 'nós'?"],
+        "critico": ["O posicionamento do autor é atual ou datado? Justifique, considerando o contexto social do RJ."],
+        "feedback_literal": "Acertou! Você identificou a informação no texto, que é o primeiro passo para a leitura.",
+        "feedback_inferencial": "Ótima conexão! Você conseguiu deduzir o sentido implícito. Prossiga para o senso crítico.",
+        "feedback_critico": "Excelente argumento! Seu posicionamento está embasado e considera o contexto do gênero. Continue a construir seu repertório.",
+        "ajuda_literal": "Revise o primeiro parágrafo. A resposta é explícita.",
+        "ajuda_inferencial": "Leia as entrelinhas. Qual a intenção do autor ao usar essa palavra? Tente conectar duas ideias diferentes.",
+        "ajuda_critico": "Lembre-se das características do Artigo de Opinião: sua resposta deve ter uma TESE. Qual é a sua tese sobre o assunto?"
+    },
+    "Notícia": {
+        "caracteristicas": ["Informação objetiva (3ª pessoa).", "Estrutura de Lide (o que, quem, quando, onde).", "Linguagem clara e formal."],
+        "literal": ["Quem são os envolvidos no fato noticiado?"],
+        "inferencial": ["Qual a possível causa não declarada para a omissão de um nome na notícia?"],
+        "critico": ["O veículo de comunicação demonstrou parcialidade? Justifique."],
+        "feedback_literal": "Acerto! Localização de fatos dominada.",
+        "feedback_inferencial": "Conseguiu ler as entrelinhas da notícia.",
+        "feedback_critico": "Avaliação ética e social do fato noticiado foi bem fundamentada.",
+        "ajuda_literal": "Busque o Lide: Onde, quem, o quê.",
+        "ajuda_inferencial": "O que a notícia implica, mas não diz abertamente?",
+        "ajuda_critico": "Pense no viés. O texto é neutro ou favorece uma parte?"
+    }
 }
 
-# --- CONFIGURAÇÃO DA PÁGINA ---
-st.set_page_config(page_title="Mentor de Gêneros Textuais", layout="wide", initial_sidebar_state="expanded")
-st.title("📚 Mentor de Gêneros Textuais")
-st.markdown("### Avaliação de Competências (Modelo ENEM)")
-st.sidebar.header("Configurações da Análise")
+# --- FUNÇÕES PARA GERAÇÃO DA ANÁLISE ---
 
-# --- FUNÇÕES ---
+def simular_avaliacao_e_feedback(nivel: str, genero: str, resposta_aluno_esta_correta: bool):
+    """
+    Simula a avaliação de uma resposta e gera o feedback construtivo na interface.
+    """
+    dados_genero = GENEROS.get(genero)
+    
+    # Simula se o aluno acertou ou errou (para fins de demonstração)
+    acertou = random.choice([True, False]) 
+    
+    # Exibe a pergunta
+    st.markdown(f"**NÍVEL {nivel.upper()}:** {dados_genero[nivel][0]}")
 
-def gerar_analise(texto, competencias_selecionadas):
-    """Gera uma análise simulada com base nas competências e no texto."""
-    st.session_state.analise_concluida = True
-    st.subheader("📝 Resultado da Análise de Competências")
+    if acertou:
+        st.success(f"✅ Feedback: {dados_genero[f'feedback_{nivel}']}")
+    else:
+        st.error(f"❌ Atenção! Sua resposta precisa de refinamento.")
+        st.info(f"💡 Dica: {dados_genero[f'ajuda_{nivel}']}")
     st.markdown("---")
 
-    resultados = []
-    
-    # Simula o processamento
-    with st.spinner('Analisando o texto com base no Manual do Corretor ENEM...'):
-        time.sleep(2) # Pausa para simular processamento
-        
-    for comp in competencias_selecionadas:
-        nivel = comp["nivel"]
-        
-        # Simula uma nota aleatória entre 60 e 200 (em incrementos de 40)
-        nota_simulada = random.choice([60, 100, 140, 180, 200])
-        feedback = feedbacks.get(nivel.split('(')[0].strip()[1:], "Feedback genérico.") # Busca o feedback pelo C1, C2, etc.
-        
-        resultados.append({
-            "Competência": nivel,
-            "Pergunta-Chave": comp["pergunta"],
-            "Nota (Simulada)": nota_simulada,
-            "Feedback": feedback
-        })
-    
-    # Exibe os resultados
-    for resultado in resultados:
-        st.info(f"**{resultado['Competência']}**")
-        st.markdown(f"**Pergunta-Chave (Critério):** {resultado['Pergunta-Chave']}")
-        
-        col1, col2 = st.columns([1, 4])
-        col1.metric(label="Nota Simulada", value=f"{resultado['Nota (Simulada)']}/200")
-        col2.warning(f"**Foco de Correção:** {resultado['Feedback']}")
-        st.markdown("---")
 
-    # Sumário da Nota Final Simulada
-    st.success("✅ Análise concluída! Role para baixo para ver a Pontuação Global.")
+def analisar_texto_e_gerar_roteiro(texto: str, genero_escolhido: str):
+    """
+    Gera as perguntas e o fluxo de interação na interface Streamlit.
+    """
+    genero = GENEROS.get(genero_escolhido)
+
+    st.subheader(f"✨ Gênero Selecionado: {genero_escolhido.upper()}")
     
-    notas = [r['Nota (Simulada)'] for r in resultados]
-    if notas:
-        media = sum(notas) / len(notas)
-        nota_final = int(round(media / 20) * 20) # Arredonda para o múltiplo de 20 mais próximo
-        
-        st.subheader("🎯 Pontuação Global (Simulada)")
-        col_final_1, col_final_2 = st.columns(2)
-        col_final_1.metric("Média das Notas Simuladas", f"{int(media)}")
-        col_final_2.metric("Pontuação Final Estimada", f"**{nota_final}**", delta=f"{nota_final - 120} pontos")
-        
-        st.balloons()
+    st.markdown("### Características Essenciais para Leitura")
+    for carac in genero["caracteristicas"]:
+        st.markdown(f"- {carac}")
 
+    st.markdown("---")
+    st.header("📚 Roteiro de Leitura Guiada")
 
-# --- INTERFACE DO USUÁRIO ---
-
-# Inicialização do estado
-if 'analise_concluida' not in st.session_state:
-    st.session_state.analise_concluida = False
+    # Aplica a simulação para cada nível
+    simular_avaliacao_e_feedback('literal', genero_escolhido, True) 
+    simular_avaliacao_e_feedback('inferencial', genero_escolhido, False) 
+    simular_avaliacao_e_feedback('critico', genero_escolhido, True) 
     
-# Seleção de Competências na Sidebar
-st.sidebar.subheader("Competências para Análise")
-comp_opcoes = [c["nivel"] for c in perguntas_competencias]
-comp_selecionadas_nomes = st.sidebar.multiselect(
-    "Selecione as Competências (ENEM):",
-    options=comp_opcoes,
-    default=comp_opcoes # Seleciona todas por padrão
+    st.balloons()
+    st.success("Análise de Gênero Concluída!")
+    
+# --- CONFIGURAÇÃO DA INTERFACE STREAMLIT ---
+
+st.set_page_config(page_title="Mentor de Gêneros Textuais", layout="wide")
+
+st.title("📚 Mentor de Gêneros Textuais")
+st.markdown("### Análise de Níveis de Leitura (Literal, Inferencial, Crítico)")
+
+# Seleção de Gênero
+genero_opcoes = list(GENEROS.keys())
+genero_selecionado = st.sidebar.selectbox(
+    "1. Selecione o Gênero Textual",
+    options=genero_opcoes,
+    index=0 
 )
-
-# Filtra as competências baseadas na seleção do usuário
-competencias_para_analise = [c for c in perguntas_competencias if c["nivel"] in comp_selecionadas_nomes]
 
 # Área de inserção de texto
 texto_digitado = st.text_area(
-    "Cole ou digite o texto/redação para análise:",
-    height=400,
-    placeholder="Ex: A persistência da violência contra a mulher na sociedade brasileira..."
+    "2. Cole ou digite o texto/fragmento para análise:",
+    height=300,
+    placeholder="Cole aqui o Artigo de Opinião, a Notícia, etc., para iniciar a análise guiada."
 )
 
 # Botão de Análise
-if st.button("Analisar Redação (Simulação ENEM)"):
+if st.button(f"Analisar Texto ({genero_selecionado})"):
     if not texto_digitado:
-        st.error("Por favor, cole um texto na área acima antes de analisar.")
-    elif not competencias_para_analise:
-        st.error("Selecione pelo menos uma competência para iniciar a análise.")
+        st.error("Por favor, cole um texto para iniciar a análise.")
     else:
-        gerar_analise(texto_digitado, competencias_para_analise)
-
-# Mensagem inicial ou de nova análise
-if not st.session_state.analise_concluida:
-    st.info("Utilize este mentor para simular a correção de uma redação, focando nas 5 competências do ENEM.")
-
-# ==========================================================
-# FIM DO CÓDIGO - ARQUIVO LIMPO
-# ==========================================================
-  
-   
- 
-     
-
-
-
-           
-       
-   
-    
-
-
-
-
-
-
+        # Simula o processamento
+        with st.spinner('Analisando as características e gerando o roteiro...'):
+            time.sleep(1) 
+        
+        analisar_texto_e_gerar_roteiro(texto_digitado, genero_selecionado)
+        
+st.sidebar.markdown("---")
+st.sidebar.info("Este aplicativo gera um roteiro de perguntas para que o aluno pratique a leitura em 3 níveis de complexidade, conforme o gênero textual selecionado.")
