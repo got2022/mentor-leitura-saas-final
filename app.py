@@ -16,7 +16,7 @@ GENEROS_TEXTUAIS = {
             {"nivel": "C1 (Norma Culta)", "pergunta": "O texto apresenta desvios gramaticais (concordância, regência, ortografia) ou de convenções da escrita (acentuação, pontuação)?"},
             {"nivel": "C2 (Tema e Repertório)", "pergunta": "A tese responde ao tema proposto pelo ENEM de forma completa? O Repertório Sociocultural usado é produtivo e legitimado?"},
            {"nivel": "C3 (Argumentação)", "pergunta": "Os argumentos apresentados nos D1 e D2 são pertinentes e se relacionam de forma coesa com a tese central?"},
-            {"nivel": "C4 (Coesão e Coerência)", "pergunta": "O texto utiliza recursos coesivos interparágrafos (conectivos) e intraparágrafos de maneira diversificada e adequada?"},
+           {"nivel": "C4 (Coesão e Coerência)", "pergunta": "O texto utiliza recursos coesivos interparágrafos (conectivos) e intraparágrafos de maneira diversificada e adequada?"},
             {"nivel": "C5 (Intervenção)", "pergunta": "A Proposta de Intervenção é completa, apresentando: Agente, Ação, Meio/Modo, Efeito e Detalhamento?"}
         ]
     },
