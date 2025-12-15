@@ -15,8 +15,8 @@ GENEROS_TEXTUAIS = {
         "perguntas": [
             {"nivel": "C1 (Norma Culta)", "pergunta": "O texto apresenta desvios gramaticais (concordância, regência, ortografia) ou de convenções da escrita (acentuação, pontuação)?"},
             {"nivel": "C2 (Tema e Repertório)", "pergunta": "A tese responde ao tema proposto pelo ENEM de forma completa? O Repertório Sociocultural usado é produtivo e legitimado?"},
-            {"nivel": "C3 (Argumentação)", "pergunta": "Os argumentos apresentados nos D1 e D2 são pertinentes e se relacionam de forma coesa com a tese central?"},
-            {"nivel": "C4 (Coesão e Coerência)", "pergunta": "O texto utiliza recursos coesivos interparágrafos (conectivos) e intraparágrafos de maneira diversificada e adequada?"},
+           {"nivel": "C3 (Argumentação)", "pergunta": "Os argumentos apresentados nos D1 e D2 são pertinentes e se relacionam de forma coesa com a tese central?"},
+            {"nivel": "C4 (Coesão e Coerência)", "pergunta": "O texto utiliza recursos coesivos interparágrafos (conectivos) e intraparágrafos de maneira diversificada e adequada?"},
             {"nivel": "C5 (Intervenção)", "pergunta": "A Proposta de Intervenção é completa, apresentando: Agente, Ação, Meio/Modo, Efeito e Detalhamento?"}
         ]
     },
@@ -80,54 +80,7 @@ GENEROS_TEXTUAIS = {
 # --- FUNÇÕES DE LÓGICA DO APP ---
 
 # A lógica de geração de roteiro permanece a mesma para manter a estrutura, mas o feedback será melhorado
-def gerar_roteiro(texto, genero):
-    if genero not in GENEROS_TEXTUAIS:
-        return None, None
-
-    data = GENEROS_TEXTUAIS[genero]
-    
-    perguntas_roteiro = []
-    niveis = ["LITERAL", "INFERENCIAL", "CRÍTICO"]
-    for nivel in niveis:
-        perguntas_do_nivel = [p for p in data["perguntas"] if p["nivel"] == nivel]
-        if perguntas_do_nivel:
-            perguntas_roteiro.append(random.choice(perguntas_do_nivel))
-        
-    return data["caracteristicas"], perguntas_roteiro
-
-def simular_correcao(perguntas_roteiro):
-    """
-    Melhora a simulação de feedback para torná-la menos 'bugada' e mais pedagógica,
-    incluindo feedbacks específicos para as 5 Competências do ENEM.
-    """
-    correcao = "## 📝 ROTEIRO DE CORREÇÃO (Simulação Pedagógica)\n\n"
-    
-    # Lista de feedbacks baseada no Manual do Corretor ENEM
-    for i, item in enumerate(perguntas_roteiro):
-        nivel = item["nivel"]
-        pergunta = item["pergunta"]
-        
-        # --- Feedback Específico para o ENEM (5 Competências) ---
-        if nivel.startswith("C"):
-            if "C1" in nivel:
-                feedbacks_acerto = ["✅ Nível 5 (200 pontos)! Domínio excelente da norma culta. Mantenha a atenção à pontuação complexa.", "✅ C1 OK! Apenas desvios pontuais. Quase no nível máximo."]
-                feedbacks_erro = ["❌ C1: Atenção! Desvios recorrentes de concordância verbal/nominal ou regência. Revise as regras básicas.", "❌ C1: Erros graves de ortografia ou acentuação. Isso limita sua nota. Consulte o vocabulário ortográfico."]
-            
-            elif "C2" in nivel:
-                feedbacks_acerto = ["✅ Nível 5 (200 pontos)! Abordagem completa do tema e uso estratégico de Repertório Sociocultural produtivo.", "✅ Tema e Repertório OK! Demonstra capacidade de leitura de mundo e conexão de áreas do conhecimento."]
-                feedbacks_erro = ["❌ C2: Tangenciamento ou fuga parcial ao tema. Refaça a análise das palavras-chave da proposta.", "❌ C2: O Repertório (citação, dado) foi usado, mas está DESCONECTADO da argumentação. Precisa de produtividade."]
-                
-            elif "C3" in nivel:
-                feedbacks_acerto = ["✅ Nível 5 (200 pontos)! Projeto de texto estratégico e eficiente. As informações se articulam em defesa de um ponto de vista.", "✅ C3 OK! Argumentos desenvolvidos com clareza e progressão textual satisfatória."]
-                feedbacks_erro = ["❌ C3: Falha na Progressão Argumentativa. O D2 (segundo argumento) repete o D1. Precisa de ideias novas e articuladas.", "❌ C3: O projeto de texto é confuso. A tese inicial não foi retomada/defendida nos desenvolvimentos."]
-                
-            elif "C4" in nivel:
-                feedbacks_acerto = ["✅ Nível 5 (200 pontos)! Domínio dos mecanismos linguísticos necessários para a construção da argumentação, com repertório coesivo diversificado.", "✅ C4 OK! Uso eficiente de conectivos inter e intraparágrafos."]
-                feedbacks_erro = ["❌ C4: Repetição excessiva dos mesmos conectivos (Ex: 'Além disso'). Diversifique seu vocabulário coesivo.", "❌ C4: Uso inadequado de conectivos (Ex: usar 'Portanto' no meio do parágrafo). Revise a função semântica."]
-                
-            elif "C5" in nivel:
-                feedbacks_acerto = ["✅ Nível 5 (200 pontos)! Proposta de Intervenção completa (5 elementos) e com excelente detalhamento.", "✅ C5 OK! A intervenção é válida e apresenta Agente, Ação, Modo/Meio e Efeito."]
-                feedbacks_erro = ["❌ C5: A Proposta está incompleta. Verifique se o Agente ou o Detalhamento foram omitidos.", "❌ C5: A intervenção é vaga. Precisa de uma Ação concreta e um Modo/Meio que seja executável."]
+  return None, None
 
         # --- Feedback Genérico para Outros Gêneros (LITERAL/INFERENCIAL/CRÍTICO) ---
         else:
