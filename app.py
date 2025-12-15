@@ -149,16 +149,21 @@ def renderizar_dashboard_interativo():
         )
 
         # Botão de Análise
-        if st.button(f"Analisar Texto - Iniciar Roteiro", type="primary", use_container_width=True):
-            if not texto_digitado:
-                st.error("Por favor, cole um texto para iniciar a análise.")
-            else:
-                with st.spinner('Analisando as características e gerando o roteiro...'):
-                    time.sleep(1) 
-                
-                # Armazena o resultado no estado da sessão para renderização
+        # Usaremos uma função de callback para garantir que o estado mude
+        def iniciar_analise():
+            if texto_digitado:
                 st.session_state['analise_data'] = (texto_digitado, genero_selecionado)
                 st.session_state['analise_iniciada'] = True
+            else:
+                # Se o texto estiver vazio, impede a inicialização
+                st.session_state['analise_iniciada'] = False
+
+
+        st.button(f"Analisar Texto - Iniciar Roteiro", type="primary", use_container_width=True, on_click=iniciar_analise)
+        
+        if st.session_state.get('analise_iniciada') and not texto_digitado:
+             st.error("Por favor, cole um texto para iniciar a análise.")
+             st.session_state['analise_iniciada'] = False # Reseta se estiver vazio
 
     with col_info:
         st.info(f"""
@@ -170,13 +175,16 @@ def renderizar_dashboard_interativo():
         """)
 
     # Renderiza o resultado da análise se o botão foi pressionado
-    if st.session_state.get('analise_iniciada'):
+    if st.session_state.get('analise_iniciada') and texto_digitado:
         st.markdown("---")
+        # Usamos o spinner aqui para aparecer *antes* da renderização
+        with st.spinner('Analisando as características e gerando o roteiro...'):
+            time.sleep(1) 
+        
         texto, genero = st.session_state['analise_data']
         renderizar_analise(texto, genero)
         
     st.markdown("---")
-
 
 def renderizar_manual_pedagogico():
     """
