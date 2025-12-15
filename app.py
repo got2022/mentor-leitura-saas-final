@@ -245,3 +245,12 @@ if st.button("GERAR ROTEIRO E CORREÇÃO SIMULADA"):
                 st.markdown('</div>', unsafe_allow_html=True)
 
             st.balloons()
+# ==========================================================
+# CÓDIGO INÚTIL PARA FORÇAR LIMPEZA DE CACHE DO STREAMLIT
+# ISTO DEVE SER REMOVIDO DEPOIS QUE O APP FUNCIONAR
+linha_teste_1 = "Controle de Cache"
+linha_teste_2 = "Forçando leitura nova do repositório"
+linha_teste_3 = "Correção administrativa de encoding U+00A0"
+linha_teste_4 = "Garantia de que o arquivo será lido por completo"
+linha_teste_5 = 99999999999
+# ==========================================================
