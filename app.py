@@ -214,12 +214,14 @@ if 'analise_iniciada' not in st.session_state:
     st.session_state['analise_iniciada'] = False
 
 # Configuração da página (Design profissional, wide e ÍCONE MODERNO)
+# Configuração da página (Design profissional, wide e ÍCONE com URL para LOGO)
 st.set_page_config(
     page_title="Mentor de Gêneros Textuais | Professora", 
     layout="wide", 
     initial_sidebar_state="collapsed", 
     menu_items={'About': 'Aplicativo desenvolvido para prática de leitura em 3 níveis.'},
-    page_icon="🤖📝" # Ícone: Robô Mentor e Escrita
+    # ATENÇÃO: ÍCONE PROFISSIONAL CÉREBRO/LIVRO. SUBSTITUA PELA SUA LOGO FINAL.
+    page_icon="https://cdn.iconscout.com/icon/premium/png-512-thumb/library-management-3071374-2560383.png"
 )
 
 st.title("📚 Mentor de Gêneros Textuais")
