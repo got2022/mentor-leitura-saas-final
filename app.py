@@ -217,7 +217,8 @@ if 'analise_iniciada' not in st.session_state:
 # Configuração da página (Design profissional, wide e ÍCONE com URL para LOGO)
 # Configuração da página (Design profissional, wide e ÍCONE FINAL de Autoridade/Norma)
 st.set_page_config(
-    page_title="Mentor de Gêneros Textuais | Professora", 
+    # TÍTULO AJUSTADO PARA FORÇAR O NOVO DEPLOY
+    page_title="Mentor de Gêneros Textuais (Professora)", 
     layout="wide", 
     initial_sidebar_state="collapsed", 
     menu_items={'About': 'Aplicativo desenvolvido para prática de leitura em 3 níveis.'},
