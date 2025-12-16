@@ -215,15 +215,14 @@ if 'analise_iniciada' not in st.session_state:
 
 # Configuração da página (Design profissional, wide e ÍCONE MODERNO)
 # Configuração da página (Design profissional, wide e ÍCONE com URL para LOGO)
+# Configuração da página (Design profissional, wide e ÍCONE FINAL de Autoridade/Norma)
 st.set_page_config(
     page_title="Mentor de Gêneros Textuais | Professora", 
     layout="wide", 
     initial_sidebar_state="collapsed", 
     menu_items={'About': 'Aplicativo desenvolvido para prática de leitura em 3 níveis.'},
-    # ATENÇÃO: ÍCONE PROFISSIONAL CÉREBRO/LIVRO. SUBSTITUA PELA SUA LOGO FINAL.
-    page_icon="https://cdn.iconscout.com/icon/premium/png-512-thumb/library-management-3071374-2560383.png"
+    page_icon="📏" # ÍCONE FINAL: Régua (Medida, Norma e Avaliação Crítica)
 )
-
 st.title("📚 Mentor de Gêneros Textuais")
 
 # Remoção da aba 'Manual Pedagógico' (as informações estão na Mentoria) para simplificar a interface.
