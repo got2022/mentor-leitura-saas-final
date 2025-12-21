@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor de Leitura | Painel do Aluno</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans leading-normal tracking-normal">
+
+    <div class="container max-w-3xl mx-auto mt-10 p-6 bg-white shadow-xl rounded-lg">
+        <header class="border-b-2 border-blue-500 pb-4 mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Mentor de Leitura</h1>
+            <p class="text-gray-600">Desenvolva sua competência leitora e domínio da norma culta.</p>
+        </header>
+
+        <section>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="aluno_nome">Nome Completo do Aluno:</label>
+                <input id="aluno_nome" type="text" placeholder="Digite seu nome conforme a chamada" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="texto">Texto para Análise:</label>
+                <textarea id="texto" rows="8" placeholder="Cole aqui o texto que você está estudando..." 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+            </div>
+
+            <button onclick="enviarParaMentor()" id="btn-gerar"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition duration-300">
+                Gerar Roteiro de Leitura Ativa
+            </button>
+        </section>
+
+        <section id="resultado-container" class="mt-10 hidden">
+            <h2 class="text-xl font-semibold text-blue-800 mb-4 border-l-4 border-blue-800 pl-2">
+                Perguntas de Compreensão (Modelo SAEB/ENEM)
+            </h2>
+            <div id="perguntas-lista" class="space-y-4">
+                </div>
+        </section>
+    </div>
+
+    <script>
+        async function enviarParaMentor() {
+            const nome = document.getElementById('aluno_nome').value;
+            const texto = document.getElementById('texto').value;
+            const btn = document.getElementById('btn-gerar');
+            const container = document.getElementById('resultado-container');
+            const lista = document.getElementById('perguntas-lista');
+
+            if (!nome || !texto) {
+                alert("Por favor, preencha seu nome e o texto.");
+                return;
+            }
+
+            // Interface: Feedback de carregamento
+            btn.innerText = "Analisando Texto...";
+            btn.disabled = true;
+
+            try {
+                // Chamada para a rota definida no seu app.py
+                const response = await fetch('/analisar_leitura', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ aluno_nome: nome, texto: texto })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Limpa lista anterior
+                    lista.innerHTML = "";
+                    
+                    // Exibe as perguntas geradas
+                    data.perguntas.forEach(pergunta => {
+                        const div = document.createElement('div');
+                        div.className = "p-4 bg-blue-50 rounded-lg border border-blue-100 text-gray-800 shadow-sm";
+                        div.innerHTML = `<strong>${pergunta}</strong>`;
+                        lista.appendChild(div);
+                    });
+
+                    container.classList.remove('hidden');
+                } else {
+                    alert("Erro: " + data.erro);
+                }
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+                alert("Falha ao conectar com o servidor.");
+            } finally {
+                btn.innerText = "Gerar Roteiro de Leitura Ativa";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
