@@ -1,4 +1,2 @@
 streamlit
-flask
-google-generativeai
-nltk
+google-genai
