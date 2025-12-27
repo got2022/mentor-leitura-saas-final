@@ -2,74 +2,139 @@ import streamlit as st
 import google.generativeai as genai
 import os
 
-# 1. DESIGN CLARO E ACESSÍVEL (PEDAGÓGICO)
-st.set_page_config(page_title="Mentor de Leitura", page_icon="📖")
+# 1. CONFIGURAÇÃO DE ALTO NÍVEL (DESIGN E FAVICON)
+st.set_page_config(
+    page_title="Mentor de Leitura Pro", 
+    page_icon="🧩", 
+    layout="wide"
+)
 
+# CSS Customizado para Design Elegante
 st.markdown("""
     <style>
-    /* Fundo claro para não cansar a vista */
-    .main { background-color: #ffffff; }
+    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800&display=swap');
     
-    /* Título elegante e sério */
-    .titulo { 
-        color: #1e3a8a; 
-        font-size: 32px; 
-        font-weight: 800; 
-        text-align: center;
-        padding: 20px;
-        border-bottom: 2px solid #e5e7eb;
+    .main {
+        background-color: #020617;
+        background-image: radial-gradient(#1e293b 0.5px, transparent 0.5px);
+        background-size: 30px 30px;
     }
     
-    /* Botão de Ativação */
+    .header-card {
+        background: linear-gradient(135deg, #1e1b4b 0%, #020617 100%);
+        padding: 50px;
+        border-radius: 0 0 50px 50px;
+        text-align: center;
+        border-bottom: 2px solid #3730a3;
+        margin-bottom: 40px;
+    }
+
+    .logo-main {
+        font-family: 'Sora', sans-serif;
+        font-weight: 800;
+        font-size: 3.5rem;
+        background: linear-gradient(to right, #818cf8, #c084fc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -3px;
+    }
+
+    /* Estilo dos Inputs */
+    .stTextArea textarea {
+        background-color: #0f172a !important;
+        color: #f1f5f9 !important;
+        border: 1px solid #334155 !important;
+        border-radius: 15px !important;
+        font-size: 16px !important;
+    }
+
+    /* Botão de Ativação Premium */
     div.stButton > button {
-        background-color: #1e3a8a !important;
+        background: linear-gradient(90deg, #4f46e5, #9333ea) !important;
         color: white !important;
-        height: 3em;
+        font-weight: 700 !important;
+        border-radius: 12px !important;
+        border: none !important;
+        padding: 25px !important;
         width: 100%;
-        border-radius: 10px;
-        font-weight: bold;
+        transition: 0.4s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    div.stButton > button:hover {
+        box-shadow: 0 0 25px rgba(139, 92, 246, 0.5);
+        transform: translateY(-2px);
     }
     </style>
-    <div class="titulo">📚 MENTOR DE LEITURA PRO</div>
+    
+    <div class="header-card">
+        <div class="logo-main">MENTOR DE LEITURA</div>
+        <p style="color: #94a3b8; font-size: 1.1rem;">Especialista em BNCC & Neurodiversidade • SEEDUC-RJ</p>
+    </div>
     """, unsafe_allow_html=True)
 
-# 2. CONEXÃO SEGURA COM A IA (SEM ERRO 404)
-api_key = os.getenv("GOOGLE_API_KEY")
-
-if api_key:
-    genai.configure(api_key=api_key)
-    # Mudança estratégica para evitar o erro 404 de versão
-    model = genai.GenerativeModel('gemini-1.5-flash')
-else:
-    st.error("Chave API não configurada no Render.")
-
-# 3. BARRA LATERAL DA INCLUSÃO (CORES DA NEURODIVERSIDADE)
-with st.sidebar:
-    st.markdown("### 🌈 ACESSIBILIDADE")
-    modo_inclusivo = st.toggle("Ativar Apoio TDAH / TEA")
-    if modo_inclusivo:
-        st.info("Modo Inclusivo: Linguagem Simples e Visual Estruturado.")
-    st.markdown("---")
-    st.write("Focado no Currículo RJ 2026")
-
-# 4. ENTRADA DE DADOS
-texto_base = st.text_area("📄 Texto da Folha (Cole aqui):", height=250)
-duvida = st.text_input("❓ Qual a dúvida do aluno?")
-
-if st.button("ATIVAR MENTOR"):
-    if not texto_base:
-        st.warning("Por favor, insira o texto.")
+# 2. CONEXÃO BLINDADA (SEM V1BETA)
+try:
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if api_key:
+        # Forçamos a configuração sem passar versão beta no model_name
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-1.5-flash')
     else:
-        try:
-            # Lógica Pedagógica
-            perfil = "Aja como mentor para TDAH/Autismo: frases curtas, sem metáforas, lista de passos." if modo_inclusivo else "Foco em descritores da BNCC e análise crítica."
-            
-            prompt = f"{perfil} \nTexto: {texto_base} \nDúvida: {duvida}"
-            
-            with st.spinner("Analisando..."):
-                # Forçamos a geração sem metadados de versão beta
-                response = model.generate_content(prompt)
-                st.markdown("### 👨‍🏫 Orientação:")
-                st.success(response.text)
-        except Exception as e:
-            st.error(f"Erro de conexão. Verifique sua chave API. (Detalhe: {e})")
+        st.error("Chave API ausente no Render.")
+except Exception as e:
+    st.error(f"Erro na Inicialização: {e}")
+
+# 3. BARRA LATERAL (MENU DA INCLUSÃO)
+with st.sidebar:
+    st.markdown("### 🧩 ACESSIBILIDADE")
+    st.write("Configurações para alunos neurodivergentes.")
+    
+    # Toggle colorido para inclusão
+    modo_inclusivo = st.toggle("ATIVAR APOIO TDAH / TEA")
+    
+    if modo_inclusivo:
+        st.info("🌈 MODO INCLUSIVO ATIVO: O Mentor usará linguagem simplificada e visual adaptado.")
+    
+    st.markdown("---")
+    st.markdown("🔒 **Versão Beta Aberta 2026**")
+
+# 4. ÁREA DE TRABALHO
+c1, c2 = st.columns(2, gap="large")
+
+with c1:
+    st.markdown("<h4 style='color:#818cf8'>📄 TEXTO DA AULA</h4>", unsafe_allow_html=True)
+    texto_base = st.text_area("input_texto", label_visibility="collapsed", height=350, placeholder="Cole aqui o conteúdo da folha ou livro...")
+
+with c2:
+    st.markdown("<h4 style='color:#818cf8'>💡 O QUE VOCÊ PRECISA?</h4>", unsafe_allow_html=True)
+    duvida = st.text_input("input_duvida", label_visibility="collapsed", placeholder="Sua dúvida para o Mentor...")
+    st.write("###") # Espaçador
+    if st.button("ATIVAR MENTOR"):
+        if not texto_base:
+            st.error("Por favor, insira o texto primeiro.")
+        else:
+            try:
+                # Personalização baseada na BNCC e Inclusão
+                diretriz = (
+                    "Aja como Mentor Inclusivo para TDAH/TEA. Use frases curtas, "
+                    "sem metáforas e linguagem denotativa (literal)." 
+                    if modo_inclusivo else 
+                    "Aja como Mentor Pedagógico da Rede RJ. Foco em descritores BNCC, inferência e análise."
+                )
+                
+                prompt = f"{diretriz}\n\nTexto: {texto_base}\nDúvida: {duvida}"
+                
+                with st.spinner("🚀 Mentor processando..."):
+                    # Chamada direta e estável
+                    response = model.generate_content(prompt)
+                    st.markdown("---")
+                    st.markdown(f"""
+                        <div style="background: white; padding: 25px; border-radius: 20px; color: #1e293b; border-left: 8px solid #4f46e5;">
+                            <h3 style="margin-top:0">👨‍🏫 Orientação do Mentor:</h3>
+                            {response.text}
+                        </div>
+                    """, unsafe_allow_html=True)
+            except Exception as e:
+                st.error("Erro na resposta da IA. Verifique se a chave API no Render está correta e sem espaços.")
