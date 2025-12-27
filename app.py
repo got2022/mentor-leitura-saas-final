@@ -1,6 +1,7 @@
 import streamlit as st
-from google import genai
+import google.generativeai as genai
 import os
+
 
 # 1. DESIGN PROFISSIONAL
 st.set_page_config(page_title="Mentor de Leitura Pro", page_icon="🧩", layout="wide")
@@ -25,11 +26,8 @@ st.markdown("""
 # 2. CONEXÃO MODERNA (MATANDO O ERRO 404 DE VEZ)
 api_key = os.getenv("GOOGLE_API_KEY")
 
-if api_key:
-    # Usando o novo cliente que o ChatGPT sugeriu
-    client = genai.Client(api_key=api_key)
-else:
-    st.error("Chave API não configurada no Render.")
+genai.configure(api_key=api_key)
+model = genai.GenerativeModel("gemini-1.0-pro")
 
 # 3. BARRA LATERAL
 with st.sidebar:
