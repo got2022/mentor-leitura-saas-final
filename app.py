@@ -24,10 +24,14 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # 2. CONEXÃO MODERNA (MATANDO O ERRO 404 DE VEZ)
+# 2. CONEXÃO COM A IA (ESTÁVEL E GRATUITA)
 api_key = os.getenv("GOOGLE_API_KEY")
 
-genai.configure(api_key=api_key)
-model = genai.GenerativeModel("gemini-1.0-pro")
+if api_key:
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel("gemini-1.0-pro")
+else:
+    st.error("Chave API do Google não encontrada. Configure a variável GOOGLE_API_KEY.")
 
 # 3. BARRA LATERAL
 with st.sidebar:
@@ -53,10 +57,12 @@ with c2:
                 
                 with st.spinner("🚀 Mentor processando..."):
                     # Nova forma de chamar a IA que não usa v1beta
-                    response = client.models.generate_content(
-                        model="gemini-1.5-flash",
-                        contents=f"{instrucao}\n\nTexto: {texto_base}\n\nDúvida: {duvida}"
-                    )
+                  model = genai.GenerativeModel("gemini-1.0-pro")
+
+response = model.generate_content(
+    f"{instrucao}\n\nTexto: {texto_base}\n\nDúvida: {duvida}"
+)
+
                     st.markdown(f'<div class="resposta-box"><b>Orientação do Mentor:</b><br><br>{response.text}</div>', unsafe_allow_html=True)
             except Exception as e:
                 st.error(f"Erro na IA: {e}")
