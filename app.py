@@ -2,7 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 import os
 
-# 1. DESIGN PREMIUM (MANTIDO E SEM MENÇÃO À SEEDUC)
+# 1. DESIGN EXCLUSIVO (SEM SEEDUC - PROPRIEDADE DA PROFESSORA)
 st.set_page_config(page_title="Mentor de Leitura Pro", page_icon="🧩", layout="wide")
 
 st.markdown("""
@@ -22,43 +22,43 @@ st.markdown("""
     </div>
     """, unsafe_allow_html=True)
 
-# 2. CONEXÃO ESTÁVEL (CORREÇÃO DO ERRO 404)
+# 2. CONEXÃO FORÇADA (VERSÃO ESTÁVEL PARA EVITAR ERRO 404)
 api_key = os.getenv("GOOGLE_API_KEY")
 if api_key:
-    # Configuração explícita para evitar a versão v1beta
-    genai.configure(api_key=api_key)
-    # Chamamos o modelo sem prefixos beta
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    try:
+        genai.configure(api_key=api_key)
+        # Forçamos o modelo sem prefixos de versão para evitar o v1beta
+        model = genai.GenerativeModel('gemini-1.5-flash')
+    except Exception as e:
+        st.error(f"Erro de configuração: {e}")
 else:
-    st.error("Chave API não configurada no Render.")
+    st.error("Chave API não detectada no Render.")
 
-# 3. BARRA LATERAL (ACESSIBILIDADE)
+# 3. ACESSIBILIDADE (🧩 QUEBRA-CABEÇA)
 with st.sidebar:
     st.markdown("### 🧩 ACESSIBILIDADE")
     modo_inclusivo = st.toggle("ATIVAR APOIO TDAH / TEA")
     st.markdown("---")
     st.caption("Focado no Currículo 2026")
 
-# 4. INTERFACE DE TRABALHO
+# 4. ÁREA DE TRABALHO
 c1, c2 = st.columns(2, gap="large")
 with c1:
     st.markdown("<h4 style='color:#818cf8'>📄 TEXTO DA AULA</h4>", unsafe_allow_html=True)
-    texto_base = st.text_area("input_texto", label_visibility="collapsed", height=300, placeholder="Cole aqui o texto...")
+    texto_base = st.text_area("input_texto", label_visibility="collapsed", height=300)
 with c2:
     st.markdown("<h4 style='color:#818cf8'>💡 DÚVIDA</h4>", unsafe_allow_html=True)
-    duvida = st.text_input("input_duvida", label_visibility="collapsed", placeholder="O que deseja saber?")
+    duvida = st.text_input("input_duvida", label_visibility="collapsed")
     st.write("###")
     if st.button("ATIVAR MENTOR"):
         if texto_base:
             try:
-                # Instruções pedagógicas baseadas no seu projeto
-                diretriz = "Aja como mentor para TDAH/TEA: linguagem literal." if modo_inclusivo else "Foco em BNCC e análise crítica."
-                prompt = f"{diretriz} Texto: {texto_base}. Pergunta: {duvida}"
+                diretriz = "Aja como mentor para TDAH/TEA: linguagem direta." if modo_inclusivo else "Foco em BNCC e análise crítica."
+                prompt = f"{diretriz}\n\nTexto: {texto_base}\n\nPergunta: {duvida}"
                 
                 with st.spinner("🚀 Mentor processando..."):
-                    # Execução direta para garantir compatibilidade
+                    # Chamada direta
                     response = model.generate_content(prompt)
                     st.markdown(f'<div class="resposta-box"><b>Orientação do Mentor:</b><br><br>{response.text}</div>', unsafe_allow_html=True)
             except Exception as e:
-                # Caso o erro persista, mostraremos o detalhe técnico
                 st.error(f"Erro na IA: {e}")
