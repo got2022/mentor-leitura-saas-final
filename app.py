@@ -48,17 +48,18 @@ with c2:
     duvida = st.text_input("dv_input", label_visibility="collapsed")
     st.write("###")
     
- if st.button("ATIVAR MENTOR"):
-    if not texto_base:
-        st.warning("Por favor, cole um texto para análise.")
-    elif not model:
-        st.error("O modelo de IA não foi carregado.")
-    else:
-        try:
-            instrucao = "Você é um mentor pedagógico. "
-            if modo_inclusivo:
-                instrucao += "Responda de forma clara e objetiva para alunos com TDAH e TEA. "
-
+     if st.button("ATIVAR MENTOR"):
+             if not texto_base:
+                     st.warning("Por favor, cole um texto para análise.")
+             elif not model:
+                     st.error("O modelo de IA não foi carregado.")
+             else:
+                 try:
+                         instrução = "Você é um mentor pedagógico."
+                         if modo_inclusivo:
+                                 instrução += "Responde de forma clara e objetiva para alunos."
+                         
+    
             with st.spinner("🚀 Mentor processando..."):
                 response = model.generate_content(
                     f"{instrucao}\n\nTexto: {texto_base}\n\nDúvida: {duvida}"
