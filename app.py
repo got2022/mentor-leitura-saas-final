@@ -48,7 +48,7 @@ with c2:
     duvida = st.text_input("dv_input", label_visibility="collapsed")
     st.write("###")
     
-     if st.button("ATIVAR MENTOR"):
+ if st.button("ATIVAR MENTOR"):
              if not texto_base:
                      st.warning("Por favor, cole um texto para análise.")
              elif not model:
