@@ -1,5 +1,5 @@
 import streamlit as st
-import google.genai as genai  # Ajuste fino na importação
+from google import genai  # Forma direta de importação
 import os
 
 # 1. DESIGN PROFISSIONAL
@@ -22,13 +22,13 @@ st.markdown("""
     </div>
     """, unsafe_allow_html=True)
 
-# 2. CONFIGURAÇÃO DA IA (SDK GOOGLE-GENAI)
+# 2. CONFIGURAÇÃO DA IA
 api_key = os.getenv("GOOGLE_API_KEY")
 client = None
 
 if api_key:
     try:
-        # Criando o cliente para a versão v1
+        # Inicializando o cliente da nova biblioteca google-genai
         client = genai.Client(api_key=api_key)
     except Exception as e:
         st.error(f"Erro na conexão: {e}")
@@ -55,9 +55,9 @@ if st.button("ATIVAR MENTOR"):
         st.warning("Por favor, cole um texto.")
     elif client:
         try:
-            instrucao = "Aja como mentor pedagógico. "
+            instrucao = "Aja como mentor pedagógico experiente. "
             if modo_inclusivo:
-                instrucao += "Linguagem simples para TDAH/TEA. "
+                instrucao += "Forneça respostas curtas, com tópicos e linguagem simples para alunos TDAH/TEA. "
             
             with st.spinner("🚀 Mentor analisando..."):
                 response = client.models.generate_content(
