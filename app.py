@@ -2,7 +2,6 @@ import streamlit as st
 import google.generativeai as genai
 import os
 
-
 # 1. DESIGN PROFISSIONAL
 st.set_page_config(page_title="Mentor de Leitura Pro", page_icon="🧩", layout="wide")
 
@@ -23,9 +22,9 @@ st.markdown("""
     </div>
     """, unsafe_allow_html=True)
 
-# 2. CONEXÃO MODERNA (MATANDO O ERRO 404 DE VEZ)
-# 2. CONEXÃO COM A IA (ESTÁVEL E GRATUITA)
+# 2. CONEXÃO COM A IA
 api_key = os.getenv("GOOGLE_API_KEY")
+model = None
 
 if api_key:
     genai.configure(api_key=api_key)
@@ -47,20 +46,20 @@ with c2:
     st.markdown("<h4 style='color:#818cf8'>💡 DÚVIDA DO ALUNO</h4>", unsafe_allow_html=True)
     duvida = st.text_input("dv_input", label_visibility="collapsed")
     st.write("###")
-    
+
+# ESPAÇAMENTO
 st.write("###")
 
+# BOTÃO E LÓGICA (CORRIGINDO A INDENTAÇÃO)
 if st.button("ATIVAR MENTOR"):
-if not texto_base:
+    if not texto_base:
         st.warning("Por favor, cole um texto para análise.")
-
     elif not model:
         st.error("O modelo de IA não foi carregado.")
-
     else:
         try:
             instrucao = "Você é um mentor pedagógico. "
- if modo_inclusivo:
+            if modo_inclusivo:
                 instrucao += "Responda de forma clara e objetiva para alunos TDAH/TEA. "
 
             with st.spinner("🚀 Mentor processando..."):
@@ -72,39 +71,9 @@ if not texto_base:
                     f'<div class="resposta-box"><b>Orientação do Mentor:</b><br><br>{response.text}</div>',
                     unsafe_allow_html=True
                 )
-
         except Exception as e:
             st.error(f"Erro na IA: {e}")
-
-                     st.error("O modelo de IA não foi carregado.")
-             else:
-                 try:
-                         instrução = "Você é um mentor pedagógico."
- if modo_inclusivo:
-                                 instrução += "Responde de forma clara e objetiva para alunos."
-                         
-    
-            with st.spinner("🚀 Mentor processando..."):
-                response = model.generate_content(
-                    f"{instrucao}\n\nTexto: {texto_base}\n\nDúvida: {duvida}"
-                )
-
-                st.markdown(
-                    f'<div class="resposta-box"><b>Orientação do Mentor:</b><br><br>{response.text}</div>',
-                    unsafe_allow_html=True
-                )
-
-        except Exception as e:
-            st.error(f"Erro na IA: {e}")
-
-
-response = model.generate_content(
-    f"{instrucao}\n\nTexto: {texto_base}\n\nDúvida: {duvida}"
-)
-
-                    st.markdown(f'<div class="resposta-box"><b>Orientação do Mentor:</b><br><br>{response.text}</div>', unsafe_allow_html=True)
-            except Exception as e:
-                st.error(f"Erro na IA: {e}")
-  
-    
-        
+   
+ 
+      
+      
