@@ -2,7 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 import os
 
-# 1. RECUPERANDO SEU DESIGN ORIGINAL (FONTE SORA E GRADIENTES)
+# 1. SEU DESIGN ORIGINAL (ESTILO SORA)
 st.set_page_config(page_title="Mentor de Leitura Pro", page_icon="🧩", layout="wide")
 
 st.markdown("""
@@ -22,15 +22,15 @@ st.markdown("""
     </div>
     """, unsafe_allow_html=True)
 
-# 2. CONEXÃO ESTÁVEL (CORRIGINDO O ERRO 404 DEFINITIVAMENTE)
+# 2. CONEXÃO SEM ERRO 404
 api_key = os.getenv("GOOGLE_API_KEY")
 
 if api_key:
     genai.configure(api_key=api_key)
-    # O segredo do 404: Usar o nome estável 'gemini-1.5-pro-latest'
-    model = genai.GenerativeModel('gemini-1.5-pro-latest')
+    # Mudamos para 'models/gemini-1.5-pro' - o caminho absoluto que evita o v1beta
+    model = genai.GenerativeModel(model_name='models/gemini-1.5-pro')
 else:
-    st.error("Chave API não configurada.")
+    st.error("Chave API ausente nas variáveis de ambiente.")
 
 # 3. INTERFACE
 with st.sidebar:
@@ -47,13 +47,13 @@ with c2:
 
 if st.button("ATIVAR MENTOR"):
     if not texto_base:
-        st.warning("Por favor, insira o texto.")
+        st.warning("Por favor, cole um texto.")
     else:
         try:
             with st.spinner("🚀 Mentor Pro analisando..."):
-                prompt = f"Atue como mentor pedagógico. Texto: {texto_base}. Dúvida: {duvida}."
+                prompt = f"Atue como mentor pedagógico. Texto: {texto_base}. Pergunta: {duvida}."
                 if modo_inclusivo:
-                    prompt += " Use linguagem adaptada para TEA/TDAH."
+                    prompt += " Adapte para linguagem clara (TEA/TDAH)."
                 
                 response = model.generate_content(prompt)
                 st.markdown(f'<div class="resposta-box"><b>Orientação:</b><br><br>{response.text}</div>', unsafe_allow_html=True)
