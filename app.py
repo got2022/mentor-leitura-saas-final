@@ -51,7 +51,7 @@ with c2:
 st.write("###")
 
 if st.button("ATIVAR MENTOR"):
-    if not texto_base:
+if not texto_base:
         st.warning("Por favor, cole um texto para análise.")
 
     elif not model:
@@ -60,7 +60,7 @@ if st.button("ATIVAR MENTOR"):
     else:
         try:
             instrucao = "Você é um mentor pedagógico. "
-            if modo_inclusivo:
+ if modo_inclusivo:
                 instrucao += "Responda de forma clara e objetiva para alunos TDAH/TEA. "
 
             with st.spinner("🚀 Mentor processando..."):
@@ -80,7 +80,7 @@ if st.button("ATIVAR MENTOR"):
              else:
                  try:
                          instrução = "Você é um mentor pedagógico."
-                         if modo_inclusivo:
+ if modo_inclusivo:
                                  instrução += "Responde de forma clara e objetiva para alunos."
                          
     
