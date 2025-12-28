@@ -1,8 +1,8 @@
 import streamlit as st
-from google import genai  # Mudança aqui: usando a biblioteca nova
+import google.genai as genai  # Ajuste fino na importação
 import os
 
-# 1. DESIGN PROFISSIONAL (Propriedade da Professora)
+# 1. DESIGN PROFISSIONAL
 st.set_page_config(page_title="Mentor de Leitura Pro", page_icon="🧩", layout="wide")
 
 st.markdown("""
@@ -22,18 +22,18 @@ st.markdown("""
     </div>
     """, unsafe_allow_html=True)
 
-# 2. CONFIGURAÇÃO DA IA (PADRÃO GOOGLE-GENAI V1)
+# 2. CONFIGURAÇÃO DA IA (SDK GOOGLE-GENAI)
 api_key = os.getenv("GOOGLE_API_KEY")
 client = None
 
 if api_key:
     try:
-        # Criando o cliente da forma moderna para evitar o erro 404
+        # Criando o cliente para a versão v1
         client = genai.Client(api_key=api_key)
     except Exception as e:
-        st.error(f"Erro ao conectar com a IA: {e}")
+        st.error(f"Erro na conexão: {e}")
 else:
-    st.error("Configure a variável GOOGLE_API_KEY no Render.")
+    st.error("Configure a GOOGLE_API_KEY no Render.")
 
 # 3. BARRA LATERAL
 with st.sidebar:
@@ -52,28 +52,18 @@ with c2:
 
 if st.button("ATIVAR MENTOR"):
     if not texto_base:
-        st.warning("Por favor, insira um texto.")
+        st.warning("Por favor, cole um texto.")
     elif client:
         try:
             instrucao = "Aja como mentor pedagógico. "
             if modo_inclusivo:
-                instrucao += "Use linguagem simples e direta para alunos TDAH/TEA. "
+                instrucao += "Linguagem simples para TDAH/TEA. "
             
             with st.spinner("🚀 Mentor analisando..."):
-                # Chamada usando o novo SDK que suporta gemini-1.5-flash sem erro 404
                 response = client.models.generate_content(
                     model="gemini-1.5-flash",
                     contents=f"{instrucao}\n\nTexto: {texto_base}\n\nPergunta: {duvida}"
                 )
-                
-                st.markdown(f"""
-                    <div class="resposta-box">
-                        <b>Orientação do Mentor:</b><br><br>
-                        {response.text}
-                    </div>
-                """, unsafe_allow_html=True)
+                st.markdown(f'<div class="resposta-box"><b>Orientação:</b><br><br>{response.text}</div>', unsafe_allow_html=True)
         except Exception as e:
             st.error(f"Erro na IA: {e}")
-
-  
-       
