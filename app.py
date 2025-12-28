@@ -1,5 +1,5 @@
 import streamlit as st
-from google import genai  # Forma direta de importação
+import google.generativeai as genai
 import os
 
 # 1. DESIGN PROFISSIONAL
@@ -22,16 +22,13 @@ st.markdown("""
     </div>
     """, unsafe_allow_html=True)
 
-# 2. CONFIGURAÇÃO DA IA
+# 2. CONFIGURAÇÃO DA IA (FORÇANDO V1 PARA EVITAR ERRO 404)
 api_key = os.getenv("GOOGLE_API_KEY")
-client = None
 
 if api_key:
-    try:
-        # Inicializando o cliente da nova biblioteca google-genai
-        client = genai.Client(api_key=api_key)
-    except Exception as e:
-        st.error(f"Erro na conexão: {e}")
+    genai.configure(api_key=api_key)
+    # Aqui está o segredo: gemini-1.5-flash na versão estável
+    model = genai.GenerativeModel('gemini-1.5-flash')
 else:
     st.error("Configure a GOOGLE_API_KEY no Render.")
 
@@ -53,17 +50,15 @@ with c2:
 if st.button("ATIVAR MENTOR"):
     if not texto_base:
         st.warning("Por favor, cole um texto.")
-    elif client:
+    else:
         try:
             instrucao = "Aja como mentor pedagógico experiente. "
             if modo_inclusivo:
-                instrucao += "Forneça respostas curtas, com tópicos e linguagem simples para alunos TDAH/TEA. "
+                instrucao += "Responda com tópicos e linguagem simples para TDAH/TEA. "
             
             with st.spinner("🚀 Mentor analisando..."):
-                response = client.models.generate_content(
-                    model="gemini-1.5-flash",
-                    contents=f"{instrucao}\n\nTexto: {texto_base}\n\nPergunta: {duvida}"
-                )
+                # Chamada direta
+                response = model.generate_content(f"{instrucao}\n\nTexto: {texto_base}\n\nPergunta: {duvida}")
                 st.markdown(f'<div class="resposta-box"><b>Orientação:</b><br><br>{response.text}</div>', unsafe_allow_html=True)
         except Exception as e:
             st.error(f"Erro na IA: {e}")
