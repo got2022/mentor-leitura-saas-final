@@ -1,8 +1,8 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai  # Mudança aqui: usando a biblioteca nova
 import os
 
-# 1. DESIGN PROFISSIONAL
+# 1. DESIGN PROFISSIONAL (Propriedade da Professora)
 st.set_page_config(page_title="Mentor de Leitura Pro", page_icon="🧩", layout="wide")
 
 st.markdown("""
@@ -22,15 +22,18 @@ st.markdown("""
     </div>
     """, unsafe_allow_html=True)
 
-# 2. CONEXÃO COM A IA
+# 2. CONFIGURAÇÃO DA IA (PADRÃO GOOGLE-GENAI V1)
 api_key = os.getenv("GOOGLE_API_KEY")
-model = None
+client = None
 
 if api_key:
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-1.0-pro")
+    try:
+        # Criando o cliente da forma moderna para evitar o erro 404
+        client = genai.Client(api_key=api_key)
+    except Exception as e:
+        st.error(f"Erro ao conectar com a IA: {e}")
 else:
-    st.error("Chave API do Google não encontrada. Configure a variável GOOGLE_API_KEY.")
+    st.error("Configure a variável GOOGLE_API_KEY no Render.")
 
 # 3. BARRA LATERAL
 with st.sidebar:
@@ -47,33 +50,30 @@ with c2:
     duvida = st.text_input("dv_input", label_visibility="collapsed")
     st.write("###")
 
-# ESPAÇAMENTO
-st.write("###")
-
-# BOTÃO E LÓGICA (CORRIGINDO A INDENTAÇÃO)
 if st.button("ATIVAR MENTOR"):
     if not texto_base:
-        st.warning("Por favor, cole um texto para análise.")
-    elif not model:
-        st.error("O modelo de IA não foi carregado.")
-    else:
+        st.warning("Por favor, insira um texto.")
+    elif client:
         try:
-            instrucao = "Você é um mentor pedagógico. "
+            instrucao = "Aja como mentor pedagógico. "
             if modo_inclusivo:
-                instrucao += "Responda de forma clara e objetiva para alunos TDAH/TEA. "
-
-            with st.spinner("🚀 Mentor processando..."):
-                response = model.generate_content(
-                    f"{instrucao}\n\nTexto: {texto_base}\n\nDúvida: {duvida}"
+                instrucao += "Use linguagem simples e direta para alunos TDAH/TEA. "
+            
+            with st.spinner("🚀 Mentor analisando..."):
+                # Chamada usando o novo SDK que suporta gemini-1.5-flash sem erro 404
+                response = client.models.generate_content(
+                    model="gemini-1.5-flash",
+                    contents=f"{instrucao}\n\nTexto: {texto_base}\n\nPergunta: {duvida}"
                 )
-
-                st.markdown(
-                    f'<div class="resposta-box"><b>Orientação do Mentor:</b><br><br>{response.text}</div>',
-                    unsafe_allow_html=True
-                )
+                
+                st.markdown(f"""
+                    <div class="resposta-box">
+                        <b>Orientação do Mentor:</b><br><br>
+                        {response.text}
+                    </div>
+                """, unsafe_allow_html=True)
         except Exception as e:
             st.error(f"Erro na IA: {e}")
-   
- 
-      
-      
+
+  
+       
