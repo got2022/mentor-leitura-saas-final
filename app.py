@@ -1,5 +1,5 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 import os
 
 # 1. RECUPERANDO SEU DESIGN ORIGINAL (ESTILO SORA)
@@ -25,12 +25,14 @@ st.markdown("""
 # 2. CONEXÃO FORÇADA (PARA MATAR O ERRO 404)
 api_key = os.getenv("GOOGLE_API_KEY")
 
-if api_key:
-    genai.configure(api_key=api_key)
-    # AQUI ESTÁ O TRUQUE: Usamos apenas 'gemini-1.5-pro' sem o prefixo models/ 
-    # Isso costuma forçar a biblioteca a buscar a versão estável v1 em vez da v1beta
-    model = genai.GenerativeModel('gemini-1.5-pro')
+# 2. CONEXÃO COM A API NOVA DO GOOGLE (v1)
+api_key = os.getenv("GOOGLE_API_KEY")
+
+if not api_key:
+    st.error("Chave API ausente no Render.")
 else:
+    client = genai.Client(api_key=api_key)
+
     st.error("Chave API ausente no Render.")
 
 # 3. INTERFACE
@@ -57,7 +59,11 @@ if st.button("ATIVAR MENTOR"):
                 if modo_inclusivo:
                     prompt += " Linguagem adaptada para TEA/TDAH."
                 
-                response = model.generate_content(prompt)
+              response = client.models.generate_content(
+    model="gemini-1.5-flash",
+    contents=prompt
+)
+
                 st.markdown(f'<div class="resposta-box"><b>Orientação:</b><br><br>{response.text}</div>', unsafe_allow_html=True)
         except Exception as e:
             st.error(f"Erro na IA: {e}")
