@@ -48,7 +48,7 @@ modo_inclusivo = st.checkbox("Ativar linguagem acessível (TEA / TDAH)")
 # AÇÃO PRINCIPAL
 # ===============================
 if st.button("Ativar Mentor"):
-  if st.button("Ativar Mentor"):
+ 
     if not texto.strip():
         st.warning("Por favor, insira um texto para análise.")
     else:
