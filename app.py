@@ -25,7 +25,7 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
-MODEL_NAME = "models/gemini-1.5-pro-latest"
+MODEL_NAME = "gemini-1.0-pro"
 
 
 # ===============================
